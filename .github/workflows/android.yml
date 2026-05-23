@@ -20,8 +20,6 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      # سيقوم النظام بالدخول إلى المجلد الفرعي أولاً ثم تثبيت الحزم
-      working-directory: ./Ai-scanner
       run: npm install
 
     - name: Set up JDK 17
