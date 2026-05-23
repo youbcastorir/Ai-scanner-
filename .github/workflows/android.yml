@@ -18,7 +18,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
+        # حذف cache لأنه يتطلب lock file
 
     - name: Install dependencies
       run: npm install
@@ -32,6 +32,7 @@ jobs:
 
     - name: Generate Debug Keystore
       run: |
+        mkdir -p android/app
         keytool -genkey -v -keystore android/app/debug.keystore \
           -storepass android -alias androiddebugkey \
           -keypass android -keyalg RSA -keysize 2048 \
