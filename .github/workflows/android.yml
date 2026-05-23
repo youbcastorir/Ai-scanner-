@@ -14,38 +14,38 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # إعداد الجافا بدون كاش لتفادي الخطأ الحالي
-    - name: set up JDK 17
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: gradle
 
-    # توليد ملف Keystore الافتراضي لحمايتك من أخطاء التوقيع
     - name: Generate Debug Keystore
       run: |
-        keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-        if [ -d "./android" ]; then
-          cp debug.keystore ./android/
-        fi
+        keytool -genkey -v -keystore android/app/debug.keystore \
+          -storepass android -alias androiddebugkey \
+          -keypass android -keyalg RSA -keysize 2048 \
+          -validity 10000 \
+          -dname "CN=Android Debug,O=Android,C=US"
 
     - name: Build with Gradle
+      working-directory: android
       run: |
-        if [ -f ./gradlew ]; then
-          chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
-        elif [ -f ./android/gradlew ]; then
-          cd android
-          chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
-        else
-          gradle assembleDebug --no-daemon
-        fi
+        chmod +x ./gradlew
+        ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: |
-          **/build/outputs/apk/debug/*.apk
-          
+        path: android/app/build/outputs/apk/debug/*.apk
