@@ -13,8 +13,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
@@ -22,8 +20,8 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      # إذا كان package.json داخل مجلد فرعي، احذف علامة # من السطر التالي واكتب اسم المجلد:
-      # working-directory: ./اسم_المجلد
+      # سيقوم النظام بالدخول إلى المجلد الفرعي أولاً ثم تثبيت الحزم
+      working-directory: ./Ai-scanner
       run: npm install
 
     - name: Set up JDK 17
