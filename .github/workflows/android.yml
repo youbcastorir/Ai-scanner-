@@ -13,14 +13,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        # حذف cache لأنه يتطلب lock file
 
     - name: Install dependencies
+      # إذا كان package.json داخل مجلد فرعي، احذف علامة # من السطر التالي واكتب اسم المجلد:
+      # working-directory: ./اسم_المجلد
       run: npm install
 
     - name: Set up JDK 17
@@ -50,3 +53,4 @@ jobs:
       with:
         name: app-debug
         path: android/app/build/outputs/apk/debug/*.apk
+        
